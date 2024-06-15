@@ -1,2 +1,24 @@
 # Hardware-Software-Communication
-Features different ways to communicate hardware and software with Python and C++, including serial, bluetooth and Wi-Fi.
+
+Integrates different communication strategies for moving a SG90 Servo motor, such as Serial, bluetooth and WI-FI.
+
+---
+
+## Sources:
+
+- `.\Docs\`: Contains the documentation for each implementation explaining their functionalities.
+
+- `.\Serial\`: Contains hardware and software configuration for serial communication between python and **Arduino**;
+
+- `.\Bluetooth\`: Contains hardware and software configuration for bluetooth communication between python and **ESP32-S1**;
+
+- `.\Wi-Fi\`: Contains hardware and software configuration for internet communication between python and **ESP32-S1**;
+
+## ToDo:
+
+```
+    - Implement and document serial communication;
+    - Implement and document bluetooth communication;
+    - Implement and document wi-fi communication;
+    - Write documentation;
+```
