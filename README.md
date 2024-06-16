@@ -14,6 +14,10 @@ Integrates different communication strategies for moving a SG90 Servo motor, suc
 
 - `.\Wi-Fi\`: Contains hardware and software configuration for internet communication between python and **ESP32-S1**;
 
+## Used libraries:
+
+PCA9685 PWM (Arduino): `https://www.arduino.cc/reference/en/libraries/pca9685-16-channel-pwm-driver-module-library/`
+
 ## ToDo:
 
 ```
