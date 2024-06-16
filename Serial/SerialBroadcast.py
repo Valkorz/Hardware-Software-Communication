@@ -1,6 +1,7 @@
 import tkinter as tk
 import customtkinter as ctk
 from serial import Serial
+import json
 
 #Define serial communication info
 port = 'COM3'
@@ -30,9 +31,19 @@ textbox_rot.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
 #Send to Arduino
 def send():
-    print(f"sending: {textbox_rot.get()}")
-    bytes = textbox_rot.get().encode()
-    ser.write(bytes)
+    data = {
+        'rotation' : textbox_rot.get(),
+        'id' : textbox_num.get()
+    }
+    
+    #convert dict to json string
+    json_string = json.dumps(data)
+    
+    #encode json string
+    json_bytes = json_string.encode()
+    
+    print(f"sending: {data}")
+    ser.write(json_bytes)
     
 
 button_send = ctk.CTkButton(master=root_window, corner_radius=10, 
