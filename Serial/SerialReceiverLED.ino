@@ -1,5 +1,4 @@
 /* HAND DETECTION WITH INMOOV + MEDIAPIPE */
-/*Prototype COPY using LEDs in case of Servo or driver failure*/
 
 //Define servo pins for each finger
 
@@ -21,11 +20,11 @@ char targetMessage[] = "pisca";
 
 //Define data array methods
 void clearData(){
+  Serial.println("clearing...");
   for(int i = 0; i < DATA_LENGTH; i++){
     nextIndex = 0;
   	data[i] = 0;
   }
-  lcd.clear();
   cleared = true;
 }
 
@@ -98,8 +97,10 @@ void loop()
     //Pass to data array, move index if full
     if(data[nextIndex] > 0) nextIndex++;
     data[nextIndex] = (char)lowByte(rxData);
+    if((char)lowByte(rxData) == QUIT) clearData();
   }
   
+  Serial.println(data);
   for(int i = 0; i < 5; i++){
     writePin(fingerPins[i],((int)data[i] - 48));
   }
