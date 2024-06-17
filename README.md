@@ -2,6 +2,7 @@
 
 Integrates different communication strategies for moving a SG90 Servo motor, such as Serial, bluetooth and WI-FI.
 
+![example](Media/inmoovservos.PNG)
 ---
 
 ## Sources:
