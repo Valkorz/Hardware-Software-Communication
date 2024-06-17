@@ -21,7 +21,7 @@ PCA9685 PWM (Arduino): `https://www.arduino.cc/reference/en/libraries/pca9685-16
 ## ToDo:
 
 ```
-    - Implement and document serial communication;
+    - Document serial communication;
     - Implement and document bluetooth communication;
     - Implement and document wi-fi communication;
     - Write documentation;
