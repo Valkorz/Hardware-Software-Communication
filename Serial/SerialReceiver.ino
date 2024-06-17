@@ -22,9 +22,18 @@ int elapsedTime;
 
 //Define data array methods
 void clearData(){
+  Serial.println("Clearing data...");
   for(int i = 0; i < DATA_LENGTH; i++){
     nextIndex = 0;
-  	data[i] = 0;
+  	data[i] = '0';
+  }
+  
+  for(int i = 0; i < 5; i++){
+    driver.setChannelPWM(i, pwmServo1.pwmForAngle(((int)data[i] - 48) * range[i]));
+    Serial.println("Set ");
+    Serial.println(i);
+    Serial.println("to ");
+    Serial.println(pwmServo1.pwmForAngle(((int)data[i] - 48) * range[i]));
   }
   cleared = true;
 }
@@ -78,6 +87,8 @@ void setup()
   driver.resetDevices(); //Reset drivers in i2c line
   driver.init(); //Initialize module with default settings
   driver.setPWMFreqServo(); //Sets pwm frequency to match servo communication
+
+  clearData();
 }
 
 //Read serial if any input is found, store on the data array
@@ -96,9 +107,18 @@ void loop()
     data[nextIndex] = (char)lowByte(rxData);
   }
   readData();
-  Serial.println(data);
   
+  //Serial.println("\n Setting pwm...");
+  //Serial.println("Data: ");
+  //Serial.println(data);
   for(int i = 0; i < 5; i++){
     driver.setChannelPWM(i, pwmServo1.pwmForAngle(((int)data[i] - 48) * range[i]));
+    //Serial.println("Setting ");
+    //Serial.println(i);
+    //Serial.println("to...");
+    //Serial.println(((int)data[i] - 48));
+    //Serial.println(driver.getChannelPWM(i));
   }
+
+  delay(300);
 }
