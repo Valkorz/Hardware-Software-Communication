@@ -41,7 +41,8 @@ pinkych.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 def send():
     reset()
     data = [thumb.get(), index.get(), middle.get(), ring.get(), pinky.get()]
-    bytes_data = struct.pack('>' + 'B' * len(data), *data)
+    data = f"{thumb.get()}{index.get()}{middle.get()}{ring.get()}{pinky.get()}"
+    bytes_data = data.encode()
 
     print(f"sending: {bytes_data}")
     ser.write(bytes_data)
