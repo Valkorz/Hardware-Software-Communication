@@ -1,16 +1,15 @@
-/* HAND DETECTION WITH INMOOV + MEDIAPIPE */
 #include <PCA9685.h>
-PCA9685 driver;  // Library using default B000000 (A5-A0) i2c address, and default Wire @400kHz
-PCA9685_ServoEval pwmServo1; //Servo functions
 
+/* HAND DETECTION WITH INMOOV + MEDIAPIPE */
+PCA9685 servoController;
+PCA9685_ServoEval pwmServo;
 //Define servo pins for each finger
 
 const int range[] = {180,180,180,180,180};
 
 ////////////////////////////////////////////
-
 //Define data array
-#define DATA_LENGTH 256
+#define DATA_LENGTH 5
 #define QUIT '#'
 
 bool receiving = false, cleared = false;
@@ -19,21 +18,14 @@ char data[DATA_LENGTH];
 int nextIndex = 0;
 int elapsedTime;
 
+char targetMessage[] = "pisca";
 
 //Define data array methods
 void clearData(){
-  Serial.println("Clearing data...");
+  Serial.println("clearing...");
   for(int i = 0; i < DATA_LENGTH; i++){
     nextIndex = 0;
   	data[i] = '0';
-  }
-  
-  for(int i = 0; i < 5; i++){
-    driver.setChannelPWM(i, pwmServo1.pwmForAngle(((int)data[i] - 48) * range[i]));
-    Serial.println("Set ");
-    Serial.println(i);
-    Serial.println("to ");
-    Serial.println(pwmServo1.pwmForAngle(((int)data[i] - 48) * range[i]));
   }
   cleared = true;
 }
@@ -84,11 +76,12 @@ void setup()
 {
   Serial.begin(9600);
   pinMode(13, OUTPUT);
-  driver.resetDevices(); //Reset drivers in i2c line
-  driver.init(); //Initialize module with default settings
-  driver.setPWMFreqServo(); //Sets pwm frequency to match servo communication
+  servoController.resetDevices();
+  servoController.init();
+  servoController.setPWMFrequency(100);
 
   clearData();
+  
 }
 
 //Read serial if any input is found, store on the data array
@@ -98,27 +91,36 @@ void loop()
 
   //Get received data, check if input is detected
   rxData = Serial.read();
+  
   if(rxData < 0){
     delay(50);
   }
-  else{
-    //Pass to data array, move index if full
-    if(data[nextIndex] > 0) nextIndex++;
-    data[nextIndex] = (char)lowByte(rxData);
+  else if(rxData == 48 || rxData == 49){
+    //Pass to data array, move index if full 
+    Serial.println("Received: ");
+    Serial.println(rxData);
+    if(nextIndex > DATA_LENGTH - 1) clearData();
+    else{
+    	data[nextIndex] = (char)lowByte(rxData);
+      nextIndex++;
+    }  
   }
-  readData();
+  else if((char)lowByte(rxData) == QUIT){
+    clearData();
+  }
   
-  //Serial.println("\n Setting pwm...");
-  //Serial.println("Data: ");
-  //Serial.println(data);
+  Serial.println(data);
+  Serial.println("nextIndex: ");
+  Serial.println(nextIndex);
+  Serial.println("\n");
   for(int i = 0; i < 5; i++){
-    driver.setChannelPWM(i, pwmServo1.pwmForAngle(((int)data[i] - 48) * range[i]));
-    //Serial.println("Setting ");
-    //Serial.println(i);
-    //Serial.println("to...");
-    //Serial.println(((int)data[i] - 48));
-    //Serial.println(driver.getChannelPWM(i));
+    Serial.print("Setting pwm for: ");
+    Serial.print(i);
+    Serial.print(" as: ");
+    Serial.print(pwmServo.pwmForAngle(((int)data[i] - 48) * range[i]));
+    Serial.println("\n");
+    servoController.setChannelPWM(i,pwmServo.pwmForAngle(((int)data[i] - 48) * range[i]));
   }
 
-  delay(300);
+  delay(1500);
 }
